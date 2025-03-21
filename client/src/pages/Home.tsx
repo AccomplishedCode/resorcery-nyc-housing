@@ -14,9 +14,9 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-5xl font-heading font-bold text-[#0A5796] mb-4"
+            className="text-4xl md:text-6xl font-heading font-bold text-[#0A5796] mb-4"
           >
-            NYC Housing Department
+            Resorcery
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -24,7 +24,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-[#6C757D] max-w-2xl mb-10"
           >
-            Resorcery: Interactive Tools for Urban Housing Development
+            Interactive Tools for Urban Housing Development
           </motion.p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl">
