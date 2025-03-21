@@ -1,13 +1,11 @@
 import { Link } from "wouter";
-import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="bg-[#F8F9FA] min-h-screen">
-      <Header />
+    <div className="bg-[#F8F9FA] min-h-screen overflow-auto">
       <main className="container mx-auto px-4 py-6">
         <div className="flex flex-col items-center justify-center py-16 text-center">
           <motion.h1 
@@ -234,10 +232,10 @@ export default function Home() {
           >
             <h3 className="font-heading font-bold text-2xl mb-4">About Resorcery</h3>
             <p className="text-[#6C757D] mb-6">
-              Resorcery is a suite of digital tools designed to help the NYC Housing Department and community stakeholders visualize, analyze, and optimize housing development opportunities across the five boroughs.
+              Resorcery is a suite of digital tools designed to help urban planners, developers, and community stakeholders visualize, analyze, and optimize housing development opportunities.
             </p>
             <p className="text-[#6C757D]">
-              By combining data-driven insights with interactive visualizations, we aim to accelerate the creation of affordable, sustainable, and community-enhancing housing projects throughout New York City.
+              By combining data-driven insights with interactive visualizations, we aim to accelerate the creation of affordable, sustainable, and community-enhancing housing projects.
             </p>
           </motion.div>
         </div>
