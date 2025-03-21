@@ -9,6 +9,8 @@ import NeighborhoodImpact from "@/pages/NeighborhoodImpact";
 import EnvironmentalImpact from "@/pages/EnvironmentalImpact";
 import AffordabilityCalculator from "@/pages/AffordabilityCalculator";
 import PolicyLab from "@/pages/PolicyLab";
+import CommunityBenefitAnalyzer from "@/pages/CommunityBenefitAnalyzer";
+import AIAssistantChat from "@/pages/AIAssistantChat";
 import Home from "@/pages/Home";
 
 function Router() {
@@ -21,6 +23,8 @@ function Router() {
       <Route path="/environmental-impact" component={EnvironmentalImpact} />
       <Route path="/affordability-calculator" component={AffordabilityCalculator} />
       <Route path="/policy-lab" component={PolicyLab} />
+      <Route path="/community-benefit-analyzer" component={CommunityBenefitAnalyzer} />
+      <Route path="/ai-assistant-chat" component={AIAssistantChat} />
       <Route component={NotFound} />
     </Switch>
   );

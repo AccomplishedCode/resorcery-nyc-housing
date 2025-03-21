@@ -9,7 +9,9 @@ const navItems = [
   { path: "/neighborhood-impact", title: "Neighborhood Impact" },
   { path: "/environmental-impact", title: "Environmental Impact" },
   { path: "/affordability-calculator", title: "Affordability Calculator" },
-  { path: "/policy-lab", title: "Policy Lab" }
+  { path: "/policy-lab", title: "Policy Lab" },
+  { path: "/community-benefit-analyzer", title: "Community Benefits" },
+  { path: "/ai-assistant-chat", title: "AI Assistant" }
 ];
 
 export function Header() {

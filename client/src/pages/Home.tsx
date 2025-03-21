@@ -156,7 +156,7 @@ export default function Home() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 1.0 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
             >
               <Card className="h-full hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
@@ -169,6 +169,57 @@ export default function Home() {
                   <p className="text-[#6C757D] mb-4">Test how adjusting policy parameters like FAR bonuses and tax incentives affects housing outcomes.</p>
                   <Link href="/policy-lab">
                     <Button className="w-full bg-[#fd7e14] hover:bg-[#fd7e14]/90">Test Policies</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+              className="md:col-span-3 lg:col-span-4 mt-8"
+            >
+              <h2 className="text-xl font-semibold text-[#0A5796] mb-2">Community & AI Tools</h2>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.1 }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="h-36 flex items-center justify-center mb-4 bg-[#20c997] bg-opacity-10 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-[#20c997]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <h2 className="font-heading font-bold text-xl mb-2">Community Benefits</h2>
+                  <p className="text-[#6C757D] mb-4">Analyze how development can address neighborhood needs like food access, healthcare, and green space.</p>
+                  <Link href="/community-benefit-analyzer">
+                    <Button className="w-full bg-[#20c997] hover:bg-[#20c997]/90">Analyze Benefits</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
+            >
+              <Card className="h-full hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="h-36 flex items-center justify-center mb-4 bg-[#6f42c1] bg-opacity-10 rounded-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-[#6f42c1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                  </div>
+                  <h2 className="font-heading font-bold text-xl mb-2">AI Assistant</h2>
+                  <p className="text-[#6C757D] mb-4">Get expert answers about housing policies, development scenarios, and project impacts in real-time.</p>
+                  <Link href="/ai-assistant-chat">
+                    <Button className="w-full bg-[#6f42c1] hover:bg-[#6f42c1]/90">Ask Questions</Button>
                   </Link>
                 </CardContent>
               </Card>
