@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { Site } from "@/lib/data";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { Plus, Minus, Move } from "lucide-react";
-import { apiRequest } from "@/lib/queryClient";
 
 interface MapProps {
   sites: Site[];
@@ -76,112 +73,129 @@ export function Map({ sites, onSiteSelect, selectedSiteId }: MapProps) {
   useEffect(() => {
     if (!mapContainer.current) return;
     
-    // Set Mapbox access token
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    
-    const center = getInitialCenter();
-    
-    const mapInstance = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [center.lng, center.lat],
-      zoom: center.zoom
-    });
-    
-    // Add navigation controls
-    mapInstance.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
-    
-    map.current = mapInstance;
-    
-    // Setup map when loaded
-    mapInstance.on('load', () => {
-      // Add NYC Area polygon for demonstration
-      mapInstance.addSource('nyc-area', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'Polygon',
-            coordinates: [[
-              [-74.03, 40.68],
-              [-73.90, 40.68],
-              [-73.90, 40.82],
-              [-74.03, 40.82],
-              [-74.03, 40.68]
-            ]]
-          }
-        }
-      });
-      
-      // Add layer styles
-      mapInstance.addLayer({
-        id: 'far-layer',
-        type: 'fill',
-        source: 'nyc-area',
-        paint: {
-          'fill-color': '#0A5796',
-          'fill-opacity': activeLayers.far ? 0.3 : 0
-        }
-      });
-      
-      mapInstance.addLayer({
-        id: 'city-owned-layer',
-        type: 'fill',
-        source: 'nyc-area',
-        paint: {
-          'fill-color': '#FF6B00',
-          'fill-opacity': activeLayers.cityOwned ? 0.3 : 0
-        }
-      });
-      
-      mapInstance.addLayer({
-        id: 'transit-layer',
-        type: 'fill',
-        source: 'nyc-area',
-        paint: {
-          'fill-color': '#28A745',
-          'fill-opacity': activeLayers.transit ? 0.3 : 0
-        }
-      });
-      
-      // Add markers for sites
-      sites.forEach(site => {
-        const markerColor = site.potentialUnits >= 75 
-          ? "#28A745" 
-          : site.potentialUnits >= 30 
-            ? "#FFC107" 
-            : "#FF6B00";
+    // Fetch Mapbox token from API
+    const initializeMap = async () => {
+      try {
+        // Ensure mapContainer.current is not null
+        if (!mapContainer.current) return;
         
-        // Create custom marker element
-        const markerEl = document.createElement('div');
-        markerEl.className = 'site-marker';
-        markerEl.style.backgroundColor = markerColor;
-        markerEl.style.width = '20px';
-        markerEl.style.height = '20px';
-        markerEl.style.borderRadius = '50%';
-        markerEl.style.display = 'flex';
-        markerEl.style.alignItems = 'center';
-        markerEl.style.justifyContent = 'center';
-        markerEl.style.color = 'white';
-        markerEl.style.fontWeight = 'bold';
-        markerEl.style.fontSize = '12px';
-        markerEl.style.cursor = 'pointer';
-        markerEl.innerText = site.id.toString();
+        // Get Mapbox token from our API
+        const response = await fetch('/api/mapbox-token');
+        const data = await response.json();
+        const token = data.token;
         
-        // Create marker and add click handler
-        const marker = new mapboxgl.Marker(markerEl)
-          .setLngLat([site.longitude, site.latitude])
-          .addTo(mapInstance);
+        // Set Mapbox access token
+        mapboxgl.accessToken = token;
         
-        markerEl.addEventListener('click', () => {
-          onSiteSelect(site.id);
+        const center = getInitialCenter();
+        
+        const mapInstance = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/light-v11',
+          center: [center.lng, center.lat],
+          zoom: center.zoom
         });
         
-        // Store marker reference
-        markers.current.push(marker);
-      });
-    });
+        // Add navigation controls
+        mapInstance.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+        
+        map.current = mapInstance;
+        
+        // Setup map when loaded
+        mapInstance.on('load', () => {
+          // Add NYC Area polygon for demonstration
+          mapInstance.addSource('nyc-area', {
+            type: 'geojson',
+            data: {
+              type: 'Feature',
+              properties: {},
+              geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [-74.03, 40.68],
+                  [-73.90, 40.68],
+                  [-73.90, 40.82],
+                  [-74.03, 40.82],
+                  [-74.03, 40.68]
+                ]]
+              }
+            }
+          });
+          
+          // Add layer styles
+          mapInstance.addLayer({
+            id: 'far-layer',
+            type: 'fill',
+            source: 'nyc-area',
+            paint: {
+              'fill-color': '#0A5796',
+              'fill-opacity': activeLayers.far ? 0.3 : 0
+            }
+          });
+          
+          mapInstance.addLayer({
+            id: 'city-owned-layer',
+            type: 'fill',
+            source: 'nyc-area',
+            paint: {
+              'fill-color': '#FF6B00',
+              'fill-opacity': activeLayers.cityOwned ? 0.3 : 0
+            }
+          });
+          
+          mapInstance.addLayer({
+            id: 'transit-layer',
+            type: 'fill',
+            source: 'nyc-area',
+            paint: {
+              'fill-color': '#28A745',
+              'fill-opacity': activeLayers.transit ? 0.3 : 0
+            }
+          });
+          
+          // Add markers for sites
+          sites.forEach(site => {
+            const markerColor = site.potentialUnits >= 75 
+              ? "#28A745" 
+              : site.potentialUnits >= 30 
+                ? "#FFC107" 
+                : "#FF6B00";
+            
+            // Create custom marker element
+            const markerEl = document.createElement('div');
+            markerEl.className = 'site-marker';
+            markerEl.style.backgroundColor = markerColor;
+            markerEl.style.width = '20px';
+            markerEl.style.height = '20px';
+            markerEl.style.borderRadius = '50%';
+            markerEl.style.display = 'flex';
+            markerEl.style.alignItems = 'center';
+            markerEl.style.justifyContent = 'center';
+            markerEl.style.color = 'white';
+            markerEl.style.fontWeight = 'bold';
+            markerEl.style.fontSize = '12px';
+            markerEl.style.cursor = 'pointer';
+            markerEl.innerText = site.id.toString();
+            
+            // Create marker and add click handler
+            const marker = new mapboxgl.Marker(markerEl)
+              .setLngLat([site.longitude, site.latitude])
+              .addTo(mapInstance);
+            
+            markerEl.addEventListener('click', () => {
+              onSiteSelect(site.id);
+            });
+            
+            // Store marker reference
+            markers.current.push(marker);
+          });
+        });
+      } catch (error) {
+        console.error("Failed to initialize map:", error);
+      }
+    };
+    
+    initializeMap();
     
     // Cleanup on unmount
     return () => {
@@ -190,7 +204,7 @@ export function Map({ sites, onSiteSelect, selectedSiteId }: MapProps) {
         map.current = null;
       }
     };
-  }, []);
+  }, [sites, onSiteSelect]);
   
   // Update marker appearance when selected site changes
   useEffect(() => {
