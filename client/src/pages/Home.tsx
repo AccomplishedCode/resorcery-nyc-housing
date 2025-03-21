@@ -24,7 +24,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-[#6C757D] max-w-2xl mb-10"
           >
-            Future Vision Initiative: Interactive Tools for Urban Housing Development
+            Resorcery: Interactive Tools for Urban Housing Development
           </motion.p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-7xl">
@@ -232,9 +232,9 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.7 }}
             className="mt-16 max-w-3xl text-center"
           >
-            <h3 className="font-heading font-bold text-2xl mb-4">About This Initiative</h3>
+            <h3 className="font-heading font-bold text-2xl mb-4">About Resorcery</h3>
             <p className="text-[#6C757D] mb-6">
-              The Future Vision Initiative is a suite of digital tools designed to help the NYC Housing Department and community stakeholders visualize, analyze, and optimize housing development opportunities across the five boroughs.
+              Resorcery is a suite of digital tools designed to help the NYC Housing Department and community stakeholders visualize, analyze, and optimize housing development opportunities across the five boroughs.
             </p>
             <p className="text-[#6C757D]">
               By combining data-driven insights with interactive visualizations, we aim to accelerate the creation of affordable, sustainable, and community-enhancing housing projects throughout New York City.

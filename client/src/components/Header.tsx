@@ -30,7 +30,7 @@ export function Header() {
             />
             <div className="ml-4">
               <h1 className="font-heading font-bold text-2xl text-[#0A5796]">Housing Department</h1>
-              <p className="text-[#6C757D] text-sm">Future Vision Initiative</p>
+              <p className="text-[#6C757D] text-sm">Resorcery</p>
             </div>
           </div>
         </Link>
