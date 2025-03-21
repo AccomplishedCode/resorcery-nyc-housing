@@ -3,6 +3,11 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // API route for Mapbox token
+  app.get("/api/mapbox-token", (req, res) => {
+    res.json({ token: process.env.MAPBOX_ACCESS_TOKEN });
+  });
+
   // API routes for NYC Housing Department mock data
   app.get("/api/sites", async (req, res) => {
     const sites = await storage.getAllSites();

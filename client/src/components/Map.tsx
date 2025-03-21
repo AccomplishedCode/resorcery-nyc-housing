@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Site } from "@/lib/data";
+import mapboxgl from "mapbox-gl";
+import "mapbox-gl/dist/mapbox-gl.css";
+import { Plus, Minus, Move } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 
 interface MapProps {
   sites: Site[];
@@ -9,18 +13,200 @@ interface MapProps {
 }
 
 export function Map({ sites, onSiteSelect, selectedSiteId }: MapProps) {
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const markers = useRef<mapboxgl.Marker[]>([]);
+  
   const [activeLayers, setActiveLayers] = useState({
     far: true,
     cityOwned: false,
     transit: false
   });
 
-  const handleLayerToggle = (layer: string) => {
-    setActiveLayers(prev => ({
-      ...prev,
-      [layer]: !prev[layer as keyof typeof prev]
-    }));
+  // Calculate center point based on sites
+  const getInitialCenter = () => {
+    // Default to Manhattan if no sites
+    if (!sites.length) {
+      return {
+        lng: -73.98,
+        lat: 40.72,
+        zoom: 12
+      };
+    }
+
+    // Calculate center based on the average of site coordinates
+    const avgLat = sites.reduce((sum, site) => sum + site.latitude, 0) / sites.length;
+    const avgLng = sites.reduce((sum, site) => sum + site.longitude, 0) / sites.length;
+
+    return {
+      lng: avgLng,
+      lat: avgLat,
+      zoom: 13
+    };
   };
+
+  const handleLayerToggle = (layer: string) => {
+    setActiveLayers(prev => {
+      const newLayers = {
+        ...prev,
+        [layer]: !prev[layer as keyof typeof prev]
+      };
+      
+      // Update map layers visibility
+      if (map.current) {
+        if (map.current.getLayer('far-layer')) {
+          map.current.setPaintProperty('far-layer', 'fill-opacity', 
+            newLayers.far ? 0.3 : 0);
+        }
+        if (map.current.getLayer('city-owned-layer')) {
+          map.current.setPaintProperty('city-owned-layer', 'fill-opacity', 
+            newLayers.cityOwned ? 0.3 : 0);
+        }
+        if (map.current.getLayer('transit-layer')) {
+          map.current.setPaintProperty('transit-layer', 'fill-opacity', 
+            newLayers.transit ? 0.3 : 0);
+        }
+      }
+      
+      return newLayers;
+    });
+  };
+
+  // Initialize map when component mounts
+  useEffect(() => {
+    if (!mapContainer.current) return;
+    
+    // Set Mapbox access token
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    
+    const center = getInitialCenter();
+    
+    const mapInstance = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/light-v11',
+      center: [center.lng, center.lat],
+      zoom: center.zoom
+    });
+    
+    // Add navigation controls
+    mapInstance.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+    
+    map.current = mapInstance;
+    
+    // Setup map when loaded
+    mapInstance.on('load', () => {
+      // Add NYC Area polygon for demonstration
+      mapInstance.addSource('nyc-area', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [[
+              [-74.03, 40.68],
+              [-73.90, 40.68],
+              [-73.90, 40.82],
+              [-74.03, 40.82],
+              [-74.03, 40.68]
+            ]]
+          }
+        }
+      });
+      
+      // Add layer styles
+      mapInstance.addLayer({
+        id: 'far-layer',
+        type: 'fill',
+        source: 'nyc-area',
+        paint: {
+          'fill-color': '#0A5796',
+          'fill-opacity': activeLayers.far ? 0.3 : 0
+        }
+      });
+      
+      mapInstance.addLayer({
+        id: 'city-owned-layer',
+        type: 'fill',
+        source: 'nyc-area',
+        paint: {
+          'fill-color': '#FF6B00',
+          'fill-opacity': activeLayers.cityOwned ? 0.3 : 0
+        }
+      });
+      
+      mapInstance.addLayer({
+        id: 'transit-layer',
+        type: 'fill',
+        source: 'nyc-area',
+        paint: {
+          'fill-color': '#28A745',
+          'fill-opacity': activeLayers.transit ? 0.3 : 0
+        }
+      });
+      
+      // Add markers for sites
+      sites.forEach(site => {
+        const markerColor = site.potentialUnits >= 75 
+          ? "#28A745" 
+          : site.potentialUnits >= 30 
+            ? "#FFC107" 
+            : "#FF6B00";
+        
+        // Create custom marker element
+        const markerEl = document.createElement('div');
+        markerEl.className = 'site-marker';
+        markerEl.style.backgroundColor = markerColor;
+        markerEl.style.width = '20px';
+        markerEl.style.height = '20px';
+        markerEl.style.borderRadius = '50%';
+        markerEl.style.display = 'flex';
+        markerEl.style.alignItems = 'center';
+        markerEl.style.justifyContent = 'center';
+        markerEl.style.color = 'white';
+        markerEl.style.fontWeight = 'bold';
+        markerEl.style.fontSize = '12px';
+        markerEl.style.cursor = 'pointer';
+        markerEl.innerText = site.id.toString();
+        
+        // Create marker and add click handler
+        const marker = new mapboxgl.Marker(markerEl)
+          .setLngLat([site.longitude, site.latitude])
+          .addTo(mapInstance);
+        
+        markerEl.addEventListener('click', () => {
+          onSiteSelect(site.id);
+        });
+        
+        // Store marker reference
+        markers.current.push(marker);
+      });
+    });
+    
+    // Cleanup on unmount
+    return () => {
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    };
+  }, []);
+  
+  // Update marker appearance when selected site changes
+  useEffect(() => {
+    const markerElements = document.querySelectorAll('.site-marker');
+    
+    markerElements.forEach((el, index) => {
+      const siteId = sites[index]?.id;
+      if (siteId === selectedSiteId) {
+        (el as HTMLElement).style.boxShadow = '0 0 0 3px #0A5796';
+        (el as HTMLElement).style.transform = 'scale(1.2)';
+      } else {
+        (el as HTMLElement).style.boxShadow = 'none';
+        (el as HTMLElement).style.transform = 'scale(1)';
+      }
+    });
+  }, [selectedSiteId, sites]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -28,23 +214,19 @@ export function Map({ sites, onSiteSelect, selectedSiteId }: MapProps) {
         <h2 className="font-heading font-bold text-xl">NYC Opportunity Finder</h2>
         <div className="flex space-x-2">
           <button className="text-sm px-3 py-1 bg-[#E9ECEF] rounded-md hover:bg-[#DEE2E6]">
-            <i className="fas fa-print mr-1"></i> Print
+            Print
           </button>
           <button className="text-sm px-3 py-1 bg-[#0A5796] text-white rounded-md hover:opacity-90">
-            <i className="fas fa-share-alt mr-1"></i> Share
+            Share
           </button>
         </div>
       </div>
       
-      <div 
-        className="relative rounded-lg overflow-hidden h-[500px]"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1546636889-ba9fdd63583e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')",
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        }}
-      >
-        {/* Map Controls */}
+      <div className="relative rounded-lg overflow-hidden h-[500px]">
+        {/* Map container - mapbox-gl will render here */}
+        <div ref={mapContainer} className="h-full w-full rounded-lg" />
+
+        {/* Map Controls Panel */}
         <div className="absolute top-4 left-4 z-10 bg-white bg-opacity-90 p-3 rounded-lg shadow-md">
           <h3 className="font-heading font-semibold text-sm mb-2">Map Layers</h3>
           <div className="space-y-2">
@@ -91,59 +273,6 @@ export function Map({ sites, onSiteSelect, selectedSiteId }: MapProps) {
               <span className="text-xs">Low (1-29)</span>
             </div>
           </div>
-        </div>
-        
-        {/* Map Markers */}
-        {sites.map(site => {
-          const markerColor = site.potentialUnits >= 75 
-            ? "#28A745" 
-            : site.potentialUnits >= 30 
-              ? "#FFC107" 
-              : "#FF6B00";
-          
-          return (
-            <motion.div 
-              key={site.id}
-              className="absolute cursor-pointer"
-              style={{ top: site.position?.top, left: site.position?.left }}
-              whileHover={{ scale: 1.2 }}
-              onClick={() => onSiteSelect(site.id)}
-            >
-              <div 
-                className="h-5 w-5 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: markerColor }}
-              >
-                <span className="text-white text-xs font-bold">{site.id}</span>
-              </div>
-            </motion.div>
-          );
-        })}
-        
-        {/* Map Overlay Layers */}
-        <div 
-          className={`absolute inset-0 bg-[#0A5796] pointer-events-none transition-opacity duration-300`}
-          style={{ opacity: activeLayers.far ? 0.3 : 0 }}
-        ></div>
-        <div 
-          className={`absolute inset-0 bg-[#FF6B00] pointer-events-none transition-opacity duration-300`}
-          style={{ opacity: activeLayers.cityOwned ? 0.3 : 0 }}
-        ></div>
-        <div 
-          className={`absolute inset-0 bg-[#28A745] pointer-events-none transition-opacity duration-300`}
-          style={{ opacity: activeLayers.transit ? 0.3 : 0 }}
-        ></div>
-        
-        {/* Map Controls */}
-        <div className="absolute bottom-4 right-4 z-10 bg-white bg-opacity-90 p-2 rounded-lg shadow-md">
-          <button className="p-2 hover:bg-[#E9ECEF] rounded-md">
-            <i className="fas fa-plus"></i>
-          </button>
-          <button className="p-2 hover:bg-[#E9ECEF] rounded-md">
-            <i className="fas fa-minus"></i>
-          </button>
-          <button className="p-2 hover:bg-[#E9ECEF] rounded-md">
-            <i className="fas fa-arrows-alt"></i>
-          </button>
         </div>
       </div>
     </div>
