@@ -9,7 +9,6 @@ const navItems = [
   { path: "/neighborhood-impact", title: "Neighborhood Impact" },
   { path: "/environmental-impact", title: "Environmental Impact" },
   { path: "/affordability-calculator", title: "Affordability Calculator" },
-  { path: "/3d-visualization", title: "3D Visualization" },
   { path: "/policy-lab", title: "Policy Lab" }
 ];
 

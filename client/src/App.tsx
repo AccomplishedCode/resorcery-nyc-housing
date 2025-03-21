@@ -8,7 +8,6 @@ import DevelopmentScenarios from "@/pages/DevelopmentScenarios";
 import NeighborhoodImpact from "@/pages/NeighborhoodImpact";
 import EnvironmentalImpact from "@/pages/EnvironmentalImpact";
 import AffordabilityCalculator from "@/pages/AffordabilityCalculator";
-import ThreeDVisualization from "@/pages/ThreeDVisualization";
 import PolicyLab from "@/pages/PolicyLab";
 import Home from "@/pages/Home";
 
@@ -21,7 +20,6 @@ function Router() {
       <Route path="/neighborhood-impact" component={NeighborhoodImpact} />
       <Route path="/environmental-impact" component={EnvironmentalImpact} />
       <Route path="/affordability-calculator" component={AffordabilityCalculator} />
-      <Route path="/3d-visualization" component={ThreeDVisualization} />
       <Route path="/policy-lab" component={PolicyLab} />
       <Route component={NotFound} />
     </Switch>

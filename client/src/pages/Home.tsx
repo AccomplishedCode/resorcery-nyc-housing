@@ -151,27 +151,7 @@ export default function Home() {
               </Card>
             </motion.div>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
-            >
-              <Card className="h-full hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="h-36 flex items-center justify-center mb-4 bg-[#0dcaf0] bg-opacity-10 rounded-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 text-[#0dcaf0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 3D object d M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 7l9-4 9 4v10l-9 4-9-4V7z" />
-                    </svg>
-                  </div>
-                  <h2 className="font-heading font-bold text-xl mb-2">3D Visualization</h2>
-                  <p className="text-[#6C757D] mb-4">Explore 3D models of development scenarios with street-level views and context visualization.</p>
-                  <Link href="/3d-visualization">
-                    <Button className="w-full bg-[#0dcaf0] hover:bg-[#0dcaf0]/90">View Models</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </motion.div>
+
             
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
