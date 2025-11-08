@@ -5,6 +5,30 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"Public Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        heading: ['"Public Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+      },
+      colors: {
+        nyc: {
+          blue: '#003764',
+          'dark-blue': '#002d56',
+          'light-blue': '#0050a1',
+          'sky-blue': '#4a90e2',
+          green: '#006400',
+          orange: '#f37321',
+          red: '#d0021b',
+          yellow: '#ffc72c',
+          purple: '#6b3aa2',
+        },
+        borough: {
+          manhattan: '#0074d9',
+          brooklyn: '#2ecc40',
+          queens: '#ff851b',
+          bronx: '#b10dc9',
+          'staten-island': '#ffdc00',
+        },
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

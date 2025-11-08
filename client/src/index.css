@@ -10,4 +10,76 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+
+  /* Smooth transitions for all interactive elements */
+  button, 
+  .hover\\:shadow-lg,
+  .hover\\:scale-105,
+  .transition-all,
+  .transition-colors,
+  .transition-shadow {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Custom scrollbar for better UX */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  /* Smooth focus states */
+  .focus\\:ring-2:focus {
+    ring-color: #003764;
+    ring-opacity: 0.3;
+  }
+
+  /* Loading state shimmer */
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Enhance button interactions */
+  button:not(:disabled):active {
+    transform: translateY(1px);
+  }
+
+  /* Glass morphism effects for cards */
+  .glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #003764, #0050a1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }
