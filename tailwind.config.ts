@@ -9,7 +9,13 @@ export default {
         sans: ['"Public Sans"', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
         heading: ['"Public Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
       },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
       colors: {
+        // NYC Custom Colors
         nyc: {
           blue: '#003764',
           'dark-blue': '#002d56',
@@ -28,13 +34,7 @@ export default {
           bronx: '#b10dc9',
           'staten-island': '#ffdc00',
         },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      colors: {
+        // Theme Colors (CSS Variables)
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

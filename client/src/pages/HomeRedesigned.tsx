@@ -155,15 +155,6 @@ export default function HomeRedesigned() {
                 </Button>
               </Link>
             </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className="text-sm text-gray-600"
-            >
-              Used by: Mayor's Office • HPD • Community Development • Policy Teams
-            </motion.div>
           </div>
         </div>
 
